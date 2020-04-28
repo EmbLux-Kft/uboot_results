@@ -78,6 +78,8 @@ $ ./push-testresult.py -p /home/hs/data/Entwicklung/tbot/
 log/lab1-wandboard-0168.json -> results/pushresults/lab1-wandboard-0168.txt
 ```
 
+Find a log with verbose log level [here](LOG.md).
+
 Which leads to the result on the server:
 
 [U-Boot test result](http://xeidos.ddns.net/ubtestresults/result/45)
