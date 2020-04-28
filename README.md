@@ -82,6 +82,48 @@ Which leads to the result on the server:
 
 [U-Boot test result](http://xeidos.ddns.net/ubtestresults/result/45)
 
+You as user do not need to install this server, it is here more as a base
+for discussion...
+
+You should use the API to post U-Boot testresults to this server (hopefully
+in conjunction with tbot!)
+
+## API
+
+First you need an user account, so if interested email me <mailto:hs@denx.de> and I can setup one account for you.
+
+I put here an example file, which sends to the server
+a new U-Boot testresult, see:
+
+[client.py](src/client.py)
+
+```bash
+source env_vars
+python3 client.py
+```
+
+env_vars contains your secret settings. Example:
+
+```
+export SERVER_PORT=""
+export SERVER_URL="http://xeidos.ddns.net/ubtestresults"
+export SERVER_USER=<username>
+export SERVER_PASSWORD=<password>
+```
+
+Hope this explains the principle.
+
+I can not often enough say, that it is a proof of concept, so please
+discuss this with me on U-Boot ML.
+
+And use tbot, than you also do not need to know this stuff.
+
+## ToDo
+
+- Discuss what infos we collect from an U-Boot build
+- How to pass files to the server (tbot logfile, test.py result)
+- How to make the server secure
+
 
 ## Installation
 
@@ -110,10 +152,6 @@ export SQLALCHEMY_DATABASE_URI="sqlite:///site.db"
 export EMAIL_USER=<email to your email account>
 export EMAIL_PASS=<password to your email account>
 export FLASK_APP=run.py
-export SERVER_PORT=5000
-export SERVER_URL="http://127.0.0.1"
-export SERVER_USER=<username>
-export SERVER_PASSWORD=<password>
 ```
 
 create secret key with:
@@ -163,25 +201,6 @@ flask db upgrade
 and you should have a new file in ```migrations/```
 you should at to the commit.
 
-
-## API
-
-I put here an example file, which sends to the server
-a new U-Boot testresult, see:
-
-[client.py](src/client.py)
-
-
-```bash
-source env_vars
-python3 client.py
-```
-
-## ToDo
-
-- Discuss what infos we collect from an U-Boot build
-- How to pass files to the server (tbot logfile, test.py result)
-- How to make the server secure
 
 ## Notes
 
