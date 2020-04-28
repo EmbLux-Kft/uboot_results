@@ -2,11 +2,16 @@
 
 This log is from starting tbot [testcase](https://github.com/EmbLux-Kft/tbot-tbot2go/blob/wandboard-devel-messe/tc/wandboard/tc_wandboard.py#L208)
 
-It checkout current mainline U-Boot source, configure the toolchain, configure
-U-Boot for the wandboard, compiles it, copy the resulting files to the lab host
-into the tftp directory, installs the images on the wandboard and checks if
-the new versions boot. After that we call test.py from U-Boot to test the installed
-U-Boot ... after all, report the results to our Testserver.
+Tasks:
+- checkout current mainline U-Boot source
+- configure the toolchain
+- configure U-Boot for the wandboard
+- compile U-Boot
+- copy the resulting files to the lab hosts tftp directory
+- install the images on the wandboard
+- checks if the new versions boot
+- test.py from U-Boot to test the installed U-Boot
+- after all, report the results to our Testserver.
 
 ```bash
 hs@lab-1:tbot-tbot2go  [wandboard-devel-messe] $ tbot @argswandboardlab1 wandboard_ub_build_install_test
