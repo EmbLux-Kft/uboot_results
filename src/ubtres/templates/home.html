@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+        <result class="media content-section">
+          <div class="media-body">
+
+            <table class="table">
+              <thead class=thead-dark>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">user</th>
+                  <th scope="col">title</th>
+                  <th scope="col">Build Date</th>
+                  <th scope="col">Basecommit</th>
+                  <th scope="col">Boardname</th>
+                  <th scope="col">defconfig</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in results.items %}
+                  {% if result.success %}
+                    <tr class="result-success">
+                  {% else %}
+                    <tr class="result-failure">
+                  {% endif %}
+                      <th scope="row"> <a href="{{ url_for('results.result', result_id=result.id) }}"> {{ result.id }}</a></th>
+                      <td class="result-title"> <a href="{{ url_for('users.user_results', username=result.author.username) }}"> <img class="rounded-circle result-img" src="{{ url_for('static', filename='profile_pics/' + result.author.image_file) }}"> </a></img> </td>
+                      <td class="result-title"> {{ result.title }}</td>
+                      <td class="result-build_date"> {{ result.build_date }}</td>
+		      <td class="result-basecommit"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit }}">{{ result.basecommit }}</td>
+                      <td class="result-boardname"> {{ result.boardname }}</td>
+                      <td class="result-defconfig"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
+                    </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </result>
+    {% for page_num in results.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if results.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}

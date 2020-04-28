@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-3">Testresults reported by {{ user.username }} ({{ results.total }})</h1>
+    {% for result in results.items %}
+        <result class="media content-section">
+          <img class="rounded-circle result-img" src="{{ url_for('static', filename='profile_pics/' + result.author.image_file) }}">
+          <div class="media-body">
+            <div class="result-metadata">
+              <a class="mr-2" href="{{ url_for('users.user_results', username=result.author.username) }}">{{ result.author.username }}</a>
+              <small class="text-muted">reported {{ result.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <table class="table">
+              <thead class=thead-dark>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">user</th>
+                  <th scope="col">title</th>
+                  <th scope="col">Build Date</th>
+                  <th scope="col">Basecommit</th>
+                  <th scope="col">Boardname</th>
+                  <th scope="col">defconfig</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if result.success %}
+                  <tr class="result-success">
+                {% else %}
+                  <tr class="result-failure">
+                {% endif %}
+                    <th scope="row"> <a href="{{ url_for('results.result', result_id=result.id) }}"> {{ result.id }}</a></th>
+                    <td class="result-title"> <a href="{{ url_for('users.user_results', username=result.author.username) }}"> <img class="rounded-circle result-img" src="{{ url_for('static', filename='profile_pics/' + result.author.image_file) }}"> </a></img> </td>
+                    <td class="result-title"> {{ result.title }}</td>
+                    <td class="result-build_date"> {{ result.build_date }}</td>
+                    <td class="result-basecommit"> {{ result.basecommit }}</td>
+                    <td class="result-boardname"> {{ result.boardname }}</td>
+                    <td class="result-defconfig"> {{ result.defconfig }}</td>
+                  </tr>
+              </tbody>
+            </table>
+
+
+          </div>
+        </result>
+    {% endfor %}
+    {% for page_num in results.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if results.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('users.user_results', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('users.user_results', username=user.username, page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}

@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+  <result class="media content-section">
+    <div class="result-metadata">
+      <img class="rounded-circle result-img" src="{{ url_for('static', filename='profile_pics/' + result.author.image_file) }}">
+      <br>
+      <a class="result-user" href="{{ url_for('users.user_results', username=result.author.username) }}">{{ result.author.username }}</a>
+    </div>
+    <div class="media-body">
+      <h2 class="result-title">{{ result.title }}</h2>
+      <hr>
+      {% if result.success %}
+        <table class="table-success">
+      {% else %}
+        <table class="table-failure">
+      {% endif %}
+          <tr>
+            <td class="table-td" >reported</td>
+            <td class="table-td">{{ result.date_posted.strftime('%Y-%m-%d %H-%M-%S') }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Build Date</td>
+            <td class="table-td">{{ result.build_date }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Architecture</td>
+            <td class="table-td">{{ result.arch }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">CPU</td>
+            <td class="table-td">{{ result.cpu }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">SoC</td>
+            <td class="table-td">{{ result.soc }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Toolchain</td>
+            <td class="table-td">{{ result.toolchain }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Basecommit</td>
+            <td class="table-td"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit }}">{{ result.basecommit }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Boardname</td>
+            <td class="table-td">{{ result.boardname }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Defconfig</td>
+	    <td class="table-td"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
+          </tr>
+          {% if result.splsize > 0 %}
+          <tr>
+            <td class="table-td">SPL size</td>
+	    <td class="table-td">{{ result.splsize }} = {{ result.splsizekib }}</td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td class="table-td">U-Boot Image size</td>
+            <td class="table-td">{{ result.ubsize }} = {{ result.ubsizekib }}</td>
+          </tr>
+          <tr>
+            <td class="table-td">Notes</td>
+            <td class="table-td">{{ result.content }}</td>
+          </tr>
+      </table>
+    </div>
+  </result>
+{% endblock content %}
