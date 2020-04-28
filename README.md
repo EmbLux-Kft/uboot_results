@@ -1,5 +1,88 @@
 ## U-Boot Testresult server
 
+This is just a proof of concept for discussion.
+
+Find an example running server here:
+
+http://xeidos.ddns.net/ubtestresults/home
+
+Running for the wandboard DL a tbot [testcase](https://github.com/EmbLux-Kft/tbot-tbot2go/blob/wandboard-devel-messe/tc/wandboard/tc_wandboard.py#L208)
+from a cron job once a day and push with tbot [generator](https://github.com/EmbLux-Kft/tbot/blob/devel/generators/push-testresult.py)
+the results to this server. Here an example log:
+
+```bash
+$ tbot @argswandboardlab1 wandboard_ub_build_install_test -q -q
+tbot starting ...
+├─Flags:
+│ 'lab-1-build'
+├─Calling wandboard_ub_build_install_test ...
+│   ├─Calling wandboard_ub_build ...
+│   │   ├─Calling uboot_build ...
+│   │   │   ├─Calling uboot_checkout ...
+│   │   │   │   ├─Builder: wandboard-builder
+│   │   │   │   └─Done. (1.410s)
+│   │   │   ├─Add toolchain to PATH /work/hs/tbot-workdir/toolchain/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabi/bin
+│   │   │   ├─Cleaning previous build ...
+│   │   │   ├─Configuring build ...
+│   │   │   ├─Patching U-Boot config ...
+│   │   │   ├─Calling kconfig_set_value ...
+│   │   │   │   ├─Setting CONFIG_LOCALVERSION to "-tbot" ...
+│   │   │   │   └─Done. (0.006s)
+│   │   │   ├─Calling uboot_make ...
+│   │   │   │   └─Done. (34.843s)
+│   │   │   └─Done. (40.402s)
+│   │   ├─Calling copy ...
+│   │   │   └─Done. (0.003s)
+│   │   ├─Calling copy ...
+│   │   │   └─Done. (0.003s)
+│   │   ├─Calling copy ...
+│   │   │   └─Done. (0.003s)
+│   │   ├─Calling copy ...
+│   │   │   └─Done. (0.003s)
+│   │   ├─Calling copy ...
+│   │   │   └─Done. (0.003s)
+│   │   └─Done. (40.801s)
+│   ├─Calling wandboard_ub_install ...
+│   │   ├─POWERON (wandboard)
+│   │   ├─UBOOT (wandboard-uboot)
+│   │   ├─POWEROFF (wandboard)
+│   │   └─Done. (12.368s)
+│   ├─Calling wandboard_ub_check_version ...
+│   │   ├─found in image U-Boot version U-Boot 2020.04-tbot-00687-gd16d37bcd4 (Apr 28 2020 - 14:58:35 +0200)
+│   │   ├─found in image U-Boot SPL version U-Boot SPL 2020.04-tbot-00687-gd16d37bcd4 (Apr 28 2020 - 14:58:35 +0200)
+│   │   ├─POWERON (wandboard)
+│   │   ├─UBOOT (wandboard-uboot)
+│   │   ├─found U-Boot SPL version U-Boot SPL 2020.04-tbot-00687-gd16d37bcd4 (Apr 28 2020 - 14:58:35 +0200) installed
+│   │   ├─found U-Boot version U-Boot 2020.04-tbot-00687-gd16d37bcd4 (Apr 28 2020 - 14:58:35 +0200) installed
+│   │   ├─POWEROFF (wandboard)
+│   │   └─Done. (8.925s)
+│   ├─Calling uboot_testpy ...
+│   │   ├─Calling uboot_setup_testhooks ...
+│   │   │   ├─Creating FIFOs ...
+│   │   │   ├─Hooks are up to date, skipping deployment ...
+│   │   │   ├─Adding hooks to $PATH ...
+│   │   │   ├─Open console & command channels ...
+│   │   │   └─Done. (0.024s)
+│   │   ├─Calling uboot_checkout ...
+│   │   │   ├─Builder: wandboard-builder
+│   │   │   └─Done. (1.430s)
+│   │   ├─POWERON (wandboard)
+│   │   ├─UBOOT (wandboard-uboot)
+│   │   ├─POWEROFF (wandboard)
+│   │   └─Done. (24.600s)
+│   └─Done. (86.696s)
+├─────────────────────────────────────────
+├─Log written to '/home/hs/data/Entwicklung/wandboard/tbot-tbot2go/log/lab1-wandboard-0168.json'
+└─SUCCESS (86.852s)
+$ ./push-testresult.py -p /home/hs/data/Entwicklung/tbot/
+log/lab1-wandboard-0168.json -> results/pushresults/lab1-wandboard-0168.txt
+```
+
+Which leads to the result on the server:
+
+[U-Boot test result](http://xeidos.ddns.net/ubtestresults/result/45)
+
+
 ## Installation
 
 ```bash
