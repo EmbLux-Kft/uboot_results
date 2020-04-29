@@ -5,27 +5,11 @@ import os
 from datetime import datetime
 # pip3 install requests-toolbelt --user
 from requests_toolbelt import MultipartEncoder
+from requests.auth import HTTPBasicAuth
 
 today = datetime.now()
 build_date = today.strftime("%Y-%m-%d %H:%M:%S")
 
-newresult = {
-    'title':'tbot triggerd test',
-    'build_date':build_date,
-    'arch':'arm',
-    'cpu' :'armv7',
-    'soc':'imx6',
-    'toolchain':'bootlin',
-    'boardname':"wandboard DL",
-    'basecommit':'2345252ef',
-    'defconfig':'wandboard_defconfig',
-    'splsize':12345,
-    'ubsize':765463,
-    'success':"True",
-    'content':"from client.py",
-}
-
-from requests.auth import HTTPBasicAuth
 
 class BearerAuth(requests.auth.AuthBase):
     def __init__(self, token):
