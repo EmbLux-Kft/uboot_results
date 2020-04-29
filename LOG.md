@@ -1,6 +1,6 @@
 ## Full tbot log
 
-This log is from starting tbot [testcase](https://github.com/EmbLux-Kft/tbot-tbot2go/blob/wandboard-devel-messe/tc/wandboard/tc_wandboard.py#L208)
+This log is from starting tbot [testcase](https://github.com/EmbLux-Kft/tbot-tbot2go/blob/wandboard-devel-messe/tc/wandboard/tc_wandboard.py#L192)
 
 Tasks:
 - checkout current mainline U-Boot source
