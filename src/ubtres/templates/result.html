@@ -36,7 +36,11 @@
           </tr>
           <tr>
             <td class="table-td">Toolchain</td>
-            <td class="table-td"><a href="{{ result.toolchain_path }}">{{ result.toolchain }}</td>
+            {% if result.toolchain_path  %}
+              <td class="table-td"><a href="{{ result.toolchain_path }}">{{ result.toolchain }}</td>
+            {% else %}
+              <td class="table-td">{{ result.toolchain }}</td>
+            {% endif %}
           </tr>
           <tr>
             <td class="table-td">Basecommit</td>
