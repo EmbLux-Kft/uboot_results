@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from flask import Blueprint
 from flask import url_for
+from flask import current_app
 from flask import jsonify, g, request
 from ubtres.models import User, Result
 from ubtres import db
@@ -51,23 +52,24 @@ def set_result():
     res = Result()
     res.from_form(form)
     res.author = g.current_user
-    # we only have a id, when we committed the result
+    # we only have a id, when we committed the result, so commit...
     db.session.add(res)
     db.session.commit()
 
-    # we did all checks, get files
-    path = f"src/ubtres/files/results/{res.id}"
+    # now get files
+    path = current_app.config['STORE_FILES'] + f"/{res.id}"
 
     os.mkdir(path)
     if "tbotlog" in request.files:
         f = request.files["tbotlog"]
-        ret = f.save(f"{path}/tbot.log")
-        # res.hastbotlog = True
-        # db.session.commit()
-        # das flag kann dann im template abgefragt werden
+        f.save(f"{path}/tbot.log")
+        res.hastbotlog = True
+        db.session.commit()
     if "tbotjson" in request.files:
         f = request.files["tbotjson"]
-        ret = f.save(f"{path}/tbot.json")
+        f.save(f"{path}/tbot.json")
+        res.hastbotjson = True
+        db.session.commit()
 
     response = jsonify({})
     response.status_code = 201

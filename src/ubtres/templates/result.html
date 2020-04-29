@@ -64,14 +64,18 @@
             <td class="table-td">U-Boot Image size</td>
             <td class="table-td">{{ result.ubsize }} = {{ result.ubsizekib }}</td>
           </tr>
-          <tr>
-            <td class="table-td">tbot log</td>
-            <td class="table-td"><a href="files/results/{{result.id}}/tbot.log">tbot log</td>
-          </tr>
-          <tr>
-            <td class="table-td">tbot json log</td>
-            <td class="table-td"><a href="files/results/{{result.id}}/tbot.json">tbot json</td>
-          </tr>
+          {% if result.hastbotlog %}
+            <tr>
+              <td class="table-td">tbot log</td>
+              <td class="table-td"><a href="files/results/{{result.id}}/tbot.log">tbot log</td>
+            </tr>
+          {% endif %}
+          {% if result.hastbotjson %}
+            <tr>
+              <td class="table-td">tbot json log</td>
+              <td class="table-td"><a href="files/results/{{result.id}}/tbot.json">tbot json</td>
+            </tr>
+          {% endif %}
           <tr>
             <td class="table-td">Notes</td>
             <td class="table-td">{{ result.content }}</td>
