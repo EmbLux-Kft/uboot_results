@@ -137,6 +137,20 @@ class Result(db.Model):
         }
         return data
 
+    def from_form(self, form):
+        for field in ['title', 'arch', 'cpu', 'soc', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'content']:
+            if field in form:
+                setattr(self, field, form[field])
+
+        self.build_date = datetime.strptime(form["build_date"], "%Y-%m-%d %H:%M:%S")
+        self.splsize = int(form["splsize"])
+        self.ubsize = int(form["ubsize"])
+        self.success = False
+        for s in ["True", "true", "1"]:
+            if s == form["success"]:
+                self.success = True
+                break
+
     def from_dict(self, data):
         for field in ['title', 'arch', 'cpu', 'soc', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'splsize', 'ubsize', 'content']:
             if field in data:

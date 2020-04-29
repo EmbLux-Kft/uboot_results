@@ -1,5 +1,6 @@
 from flask import (render_template, url_for, flash,
-                   redirect, request, abort, Blueprint)
+                   redirect, request, abort, Blueprint,
+                   send_from_directory, current_app)
 from flask_login import current_user, login_required
 from ubtres import db
 from ubtres.models import Result
@@ -40,3 +41,8 @@ def result(result_id):
     result = Result.query.get_or_404(result_id)
     result.calc_values()
     return render_template('result.html', title=result.title, result=result)
+
+@results.route("/result/files/results/<int:result_id>/<string:filename>")
+def result_tbot_log(result_id, filename):
+    return send_from_directory(current_app.config['STORE_FILES'] + f"/{result_id}",
+                               filename, as_attachment=True)

@@ -3,6 +3,8 @@
 import requests
 import os
 from datetime import datetime
+# pip3 install requests-toolbelt --user
+from requests_toolbelt import MultipartEncoder
 
 today = datetime.now()
 build_date = today.strftime("%Y-%m-%d %H:%M:%S")
@@ -11,7 +13,7 @@ newresult = {
     'title':'tbot triggerd test',
     'build_date':build_date,
     'arch':'arm',
-    'cpu' :'armv7'
+    'cpu' :'armv7',
     'soc':'imx6',
     'toolchain':'bootlin',
     'boardname':"wandboard DL",
@@ -83,13 +85,31 @@ if r.status_code != 200:
 data = r.json()
 print("DATA ", data)
 
-print ("POST result ------------------- ")
 loc = f"{location}/newresult"
-print("DATA ", newresult)
-headers = {}
-r = s.post(url = f"{URL}:{loc}", auth=BearerAuth(tok), json=newresult, headers=headers)
+print ("POST result ------------------- ", loc)
 
-print("R ", r)
+m = MultipartEncoder(
+    fields={
+        'title': 'tbot triggerd test',
+        'build_date':build_date,
+        'arch':'arm',
+        'cpu' :'armv7',
+        'soc':'imx6',
+        'toolchain':'bootlin',
+        'boardname':"wandboard DL",
+        'basecommit':'2345252ef',
+        'defconfig':'wandboard_defconfig',
+        'splsize':"12345",
+        'success':"True",
+        'content':"from client.py",
+        'ubsize':"765463",
+        'tbotlog': ('filename', open('log/tbot.log', 'rb'), 'text/plain'),
+        'tbotjson': ('filename', open('log/tbot.json', 'rb'), 'text/plain'),
+        }
+    )
+
+r = s.post(url = f"{URL}:{loc}", auth=BearerAuth(tok), data=m, headers={'Content-Type': m.content_type})
+
 print("R status code ", r.status_code)
 if r.status_code != 201:
     raise RuntimeError(f"got status code {r.status_code}")
