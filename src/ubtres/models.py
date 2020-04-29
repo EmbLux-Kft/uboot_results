@@ -156,6 +156,8 @@ class Result(db.Model):
     def calc_values(self):
         self.splsizekib = human_size(self.splsize)
         self.ubsizekib = human_size(self.ubsize)
+        tmp = self.toolchain.split("/")
+        self.toolchain_path = "https://releases.linaro.org/components/toolchain/binaries" + "/" + tmp[0] + "/" + tmp[1]
 
     def __repr__(self):
         return f"Result('{self.title}', '{self.build_date}', '{self.arch}', '{self.soc}', '{self.toolchain}', '{self.basecommit}', '{self.boardname}', '{self.defconfig}', '{self.splsize}', '{self.ubsize}', '{self.date_posted}', '{self.success}')"

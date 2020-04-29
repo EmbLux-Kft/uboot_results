@@ -36,7 +36,7 @@
           </tr>
           <tr>
             <td class="table-td">Toolchain</td>
-            <td class="table-td">{{ result.toolchain }}</td>
+            <td class="table-td"><a href="{{ result.toolchain_path }}">{{ result.toolchain }}</td>
           </tr>
           <tr>
             <td class="table-td">Basecommit</td>
@@ -48,12 +48,12 @@
           </tr>
           <tr>
             <td class="table-td">Defconfig</td>
-	    <td class="table-td"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
+            <td class="table-td"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
           </tr>
           {% if result.splsize > 0 %}
           <tr>
             <td class="table-td">SPL size</td>
-	    <td class="table-td">{{ result.splsize }} = {{ result.splsizekib }}</td>
+            <td class="table-td">{{ result.splsize }} = {{ result.splsizekib }}</td>
           </tr>
           {% endif %}
           <tr>
