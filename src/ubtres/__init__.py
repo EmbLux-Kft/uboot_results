@@ -27,11 +27,13 @@ def create_app(config_class=Config):
 
     from ubtres.users.routes import users
     from ubtres.results.routes import results
+    from ubtres.stats.routes import stats
     from ubtres.main.routes import main
     from ubtres.errors.handlers import errors
     from ubtres.api.routes import restapi
     app.register_blueprint(users)
     app.register_blueprint(results)
+    app.register_blueprint(stats)
     app.register_blueprint(main)
     app.register_blueprint(errors)
     app.register_blueprint(restapi, url_prefix='/api')
