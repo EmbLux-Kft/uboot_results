@@ -99,6 +99,10 @@ a new U-Boot testresult, see:
 
 [client.py](src/client.py)
 
+new data defined here:
+
+[data](src/client.py#L75)
+
 ```bash
 source env_vars
 python3 client.py
@@ -123,8 +127,25 @@ And use tbot, than you also do not need to know this stuff.
 ## ToDo
 
 - Discuss what infos we collect from an U-Boot build
-- How to pass files to the server (tbot logfile, test.py result)
+
+  [current state](src/ubtres/models.py#L103)
+
+- How to pass files to the server (tbot logfile, test.py result)?
+
+  First approach collecting tbot.json logfile and log from
+  stdio tbot output running.
+
+  [log](http://xeidos.ddns.net/ubtestresults/result/53)
+
+  I use currently multipart/form-data
+  with [MultipartEncoder](https://toolbelt.readthedocs.io/en/latest/uploading-data.html)
+
+  May there is a better approach?
+
+  Also, I do not save the files in the DB, instead in the filesystem.
+
 - How to make the server secure
+- smarter design of the webpages
 
 
 ## Installation
