@@ -6,8 +6,10 @@ from flask import current_app
 from flask import jsonify, g, request
 from ubtres.models import User, Result
 from ubtres import db
+from ubtres.utils import get_defconfig_data
 from ubtres.api.auth import basic_auth, token_auth
 from ubtres.api.errors import bad_request
+from ubtres.errors.handlers import error_404, error_416
 
 restapi = Blueprint('api', __name__)
 
@@ -31,6 +33,20 @@ def revoke_token():
 @token_auth.login_required
 def get_result(id):
     return jsonify(Result.query.get_or_404(id).to_dict())
+
+@restapi.route('/result/<string:defconfig>', methods=['GET'])
+@token_auth.login_required
+def get_defconfig_lastid(defconfig):
+    """
+    get last reported result from defconfig
+    """
+    result = Result.query.filter(Result.defconfig==defconfig).order_by(-Result.id).first()
+    if result == None:
+        return error_404(0)
+
+    # ToDo return ID
+    return jsonify(result.to_dict())
+
 
 @restapi.route('/newresult', methods=['POST'])
 @token_auth.login_required

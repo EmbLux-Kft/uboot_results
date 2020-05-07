@@ -69,6 +69,19 @@ if r.status_code != 200:
 data = r.json()
 print("DATA ", data)
 
+print ("GET last wandboard_defconfig result ------------------- ")
+loc = f"{location}/result/wandboard_defconfig"
+r = s.get(url = f"{URL}:{loc}", auth=BearerAuth(tok))
+
+print("R ", r)
+print("R status code ", r.status_code)
+if r.status_code != 200:
+    raise RuntimeError(f"got status code {r.status_code}")
+
+data = r.json()
+print("DATA ", data)
+
+
 loc = f"{location}/newresult"
 print ("POST result ------------------- ", loc)
 
