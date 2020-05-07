@@ -1,5 +1,6 @@
 from flask import (make_response, flash, Blueprint)
 from flask_login import current_user, login_required
+from ubtres.utils import get_defconfig_data
 from ubtres import db
 from ubtres.models import Result
 from ubtres.errors.handlers import error_404, error_416
@@ -9,26 +10,6 @@ from matplotlib.figure import Figure
 import io
 
 stats = Blueprint('stats', __name__)
-
-def get_defconfig_data(defconfig, count):
-    result = Result.query.filter(Result.defconfig==defconfig).all()
-    if result == None:
-        return None, None, None
-
-    i = 0
-    dates = []
-    splsizes = []
-    ubsizes = []
-    for res in reversed(result):
-        d = res.to_dict()
-        dates.insert(0, d["basecommit"])
-        ubsizes.insert(0, d["ubsize"])
-        splsizes.insert(0, d["splsize"])
-        i += 1
-        if i == count:
-            return dates, splsizes, ubsizes
-
-    return dates, splsizes, ubsizes
 
 def roundup(x):
     return x if x % 100 == 0 else x + 100 - x % 100
