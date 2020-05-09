@@ -66,5 +66,5 @@ def stats_defconfig(defconfig, imgtyp, count):
 
 @stats.route("/stats/<string:defconfig>/<int:count>")
 def result_spl_uboot(defconfig, count):
-    data = {"defconfig" : defconfig, "count" : count }
+    data = {"defconfig" : defconfig, "count" : str(count) }
     return render_template('stats.html', title=f"SPL / U-Boot for {defconfig}", data=data)
