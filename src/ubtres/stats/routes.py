@@ -67,4 +67,11 @@ def stats_defconfig(defconfig, imgtyp, count):
 @stats.route("/stats/<string:defconfig>/<int:count>")
 def result_spl_uboot(defconfig, count):
     data = {"defconfig" : defconfig, "count" : str(count) }
+    dates, splsizes, ubsizes = get_defconfig_data(defconfig, count)
+    hasspl = False
+    for n in splsizes:
+        if n > 0:
+            hasspl = True
+            break
+    data["hasspl"] = hasspl
     return render_template('stats.html', title=f"SPL / U-Boot for {defconfig}", data=data)

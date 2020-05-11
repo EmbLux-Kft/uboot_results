@@ -2,8 +2,10 @@
 {% block content %}
   <result class="media content-section">
     <div class="media-body">
-      <img src="/ubtestresults/stats/{{ data["defconfig"] }}/u-boot/{{ data["count"] }}" alt="Image U-Boot">
-      <img src="/ubtestresults/stats/{{ data["defconfig"] }}/spl/{{ data["count"] }}" alt="Image SPL">
+      <img src="/stats/{{ data["defconfig"] }}/u-boot/{{ data["count"] }}" alt="Image U-Boot">
+      {% if data.hasspl %}
+        <img src="/stats/{{ data["defconfig"] }}/spl/{{ data["count"] }}" alt="Image SPL">
+      {% endif %}
     </div>
   </result>
 {% endblock content %}
