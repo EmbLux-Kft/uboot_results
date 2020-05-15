@@ -61,12 +61,15 @@ def set_result():
     #print("---------------------------- data ", request.data)
 
     form = request.form
-    for ch in ['title', 'build_date', 'arch', 'soc', 'cpu', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'splsize', 'ubsize', 'content', 'success']:
+    for ch in ['title', 'build_date', 'arch', 'soc', 'cpu', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'content', 'success', 'images']:
         if ch not in form:
             return bad_request(f'must include {ch} field')
 
     res = Result()
-    res.from_form(form)
+    ret = res.from_form(form)
+    if not ret:
+        return bad_request(f'images must be in json format [{"name":"imgname", "size":"imgsize"}]')
+
     res.author = g.current_user
     # we only have a id, when we committed the result, so commit...
     db.session.add(res)

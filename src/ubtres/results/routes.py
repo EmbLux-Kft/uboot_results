@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from ubtres import db
 from ubtres.models import Result
 from ubtres.results.forms import ResultForm
+import json
 
 results = Blueprint('results', __name__)
 
@@ -23,8 +24,7 @@ def new_result():
                 basecommit=form.basecommit.data,
                 boardname=form.boardname.data,
                 defconfig=form.defconfig.data,
-                splsize=form.splsize.data,
-                ubsize=form.ubsize.data,
+                images=form.images.data,
                 content=form.content.data,
                 author=current_user,
                 success=form.success.data)
@@ -39,6 +39,8 @@ def new_result():
 @results.route("/result/<int:result_id>")
 def result(result_id):
     result = Result.query.get_or_404(result_id)
+
+    result.json_images = json.loads(result.images)
     result.calc_values()
     return render_template('result.html', title=result.title, result=result)
 

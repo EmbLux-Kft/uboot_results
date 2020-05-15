@@ -54,16 +54,14 @@
             <td class="table-td">Defconfig</td>
             <td class="table-td"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
           </tr>
-          {% if result.splsize > 0 %}
-          <tr>
-            <td class="table-td">SPL size</td>
-            <td class="table-td">{{ result.splsize }} = {{ result.splsizekib }}</td>
-          </tr>
+          {% if result.images %}
+            {% for n in result.json_images %}
+              <tr>
+                <td class="table-td">{{ n["name"] }}</td>
+                <td class="table-td">{{ n["size"] }} bytes = {{ n["sizekib"] }}</td>
+              </tr>
+	          {%endfor%}
           {% endif %}
-          <tr>
-            <td class="table-td">U-Boot Image size</td>
-            <td class="table-td">{{ result.ubsize }} = {{ result.ubsizekib }}</td>
-          </tr>
           {% if result.hastbotlog %}
             <tr>
               <td class="table-td">tbot log</td>

@@ -5,6 +5,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask import current_app
 from ubtres import db, login_manager, bcrypt
 from flask_login import UserMixin
+import json
 
 
 @login_manager.user_loader
@@ -111,8 +112,9 @@ class Result(db.Model):
     basecommit = db.Column(db.String(40), nullable=False)
     boardname = db.Column(db.String(100), nullable=True, default="unknown")
     defconfig = db.Column(db.String(40), nullable=False)
-    splsize = db.Column(db.Integer, nullable=True)
-    ubsize = db.Column(db.Integer, nullable=True)
+    # json string
+    # [{"name":"<nameofimage>", "size":"<sizeofimage>"},]
+    images = db.Column(db.String(300), nullable=True)
     success = db.Column(db.Boolean(), default=True)
     hastbotlog = db.Column(db.Boolean(), nullable=True, default=False)
     hastbotjson = db.Column(db.Boolean(), nullable=True, default=False)
@@ -132,29 +134,56 @@ class Result(db.Model):
             'basecommit': self.basecommit,
             'boardname' : self.boardname,
             'defconfig': self.defconfig,
-            'splsize': self.splsize,
-            'ubsize': self.ubsize,
+            'images' : self.images,
             'content': self.content,
             'success': self.success,
         }
         return data
 
+    def check_json_sring(self, jsonstr):
+        """
+        check if jsonstr is a valid json string
+        True if so, else False
+        """
+        try:
+            tmp = json.loads(jsonstr)
+        except:
+            print("No json")
+            return False
+
+        for n in tmp:
+            try:
+                n["name"]
+            except:
+                print("No name field")
+                return False
+            try:
+                n["size"]
+            except:
+                print("No name size")
+                return False
+        return True
+
     def from_form(self, form):
-        for field in ['title', 'arch', 'cpu', 'soc', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'content']:
+        if not self.check_json_sring(form['images']):
+            return False
+
+        for field in ['title', 'arch', 'cpu', 'soc', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'content', 'images']:
             if field in form:
                 setattr(self, field, form[field])
 
         self.build_date = datetime.strptime(form["build_date"], "%Y-%m-%d %H:%M:%S")
-        self.splsize = int(form["splsize"])
-        self.ubsize = int(form["ubsize"])
-        self.success = False
         for s in ["True", "true", "1"]:
             if s == form["success"]:
                 self.success = True
                 break
+        return True
 
     def from_dict(self, data):
-        for field in ['title', 'arch', 'cpu', 'soc', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'splsize', 'ubsize', 'content']:
+        if not self.check_json_sring(data['images']):
+            return False
+
+        for field in ['title', 'arch', 'cpu', 'soc', 'toolchain', 'basecommit', 'boardname', 'defconfig', 'content', 'images']:
             if field in data:
                 setattr(self, field, data[field])
         # handle build_date
@@ -168,14 +197,18 @@ class Result(db.Model):
         if isinstance(data["success"], str):
             data["success"] = False
         self.success = data["success"]
+        return True
 
     def calc_values(self):
-        self.splsizekib = human_size(self.splsize)
-        self.ubsizekib = human_size(self.ubsize)
         self.toolchain_path = ""
         if "linaro" in self.toolchain:
             tmp = self.toolchain.split("/")
             self.toolchain_path = "https://releases.linaro.org/components/toolchain/binaries" + "/" + tmp[0] + "/" + tmp[1]
+        if self.images:
+            self.json_images = json.loads(self.images)
+            for n in self.json_images:
+                sz = human_size(int(n['size']))
+                n["sizekib"] = f"{sz}"
 
     def __repr__(self):
-        return f"Result('{self.title}', '{self.build_date}', '{self.arch}', '{self.soc}', '{self.toolchain}', '{self.basecommit}', '{self.boardname}', '{self.defconfig}', '{self.splsize}', '{self.ubsize}', '{self.date_posted}', '{self.success}')"
+        return f"Result('{self.title}', '{self.build_date}', '{self.arch}', '{self.soc}', '{self.toolchain}', '{self.basecommit}', '{self.boardname}', '{self.defconfig}', '{self.images}', '{self.date_posted}', '{self.success}')"

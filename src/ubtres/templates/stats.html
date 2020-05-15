@@ -2,10 +2,9 @@
 {% block content %}
   <result class="media content-section">
     <div class="media-body">
-      <img src="/stats/{{ data["defconfig"] }}/u-boot/{{ data["count"] }}" alt="Image U-Boot">
-      {% if data.hasspl %}
-        <img src="/stats/{{ data["defconfig"] }}/spl/{{ data["count"] }}" alt="Image SPL">
-      {% endif %}
+      {% for n in data["imagenames"] %}
+        <img src="/stats/{{ data["defconfig"] }}/{{ n }}/{{ data["count"] }}" alt="Image U-Boot">
+      {%endfor%}
     </div>
   </result>
 {% endblock content %}

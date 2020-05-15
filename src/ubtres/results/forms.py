@@ -13,8 +13,7 @@ class ResultForm(FlaskForm):
     basecommit = StringField('Base commit', validators=[DataRequired()])
     boardname = StringField('Boardname', validators=[DataRequired()])
     defconfig = StringField('Used default config', validators=[DataRequired()])
-    splsize = IntegerField('SPL image size', default=0)
-    ubsize = IntegerField('U-Boot image size')
+    images = StringField('Images', validators=[DataRequired()])
     success = BooleanField('success')
 
     content = TextAreaField('Content')
