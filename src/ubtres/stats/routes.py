@@ -208,7 +208,7 @@ def stats_defconfig(defconfig, imgtyp, count):
     xs = range(count)
     axis.set_xticks(xs)
     axis.set_xticklabels(dates, rotation=90)
-    axis.plot(xs, sz, label=img["name"])
+    axis.plot(xs, sz, 'r*', label=img["name"])
     axis.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0., shadow=True)
     canvas = FigureCanvas(fig)
     output = io.BytesIO()
