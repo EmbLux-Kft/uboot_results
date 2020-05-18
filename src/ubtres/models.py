@@ -173,6 +173,7 @@ class Result(db.Model):
                 setattr(self, field, form[field])
 
         self.build_date = datetime.strptime(form["build_date"], "%Y-%m-%d %H:%M:%S")
+        self.success = False
         for s in ["True", "true", "1"]:
             if s == form["success"]:
                 self.success = True
