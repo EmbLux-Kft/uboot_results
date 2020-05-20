@@ -118,6 +118,7 @@ class Result(db.Model):
     success = db.Column(db.Boolean(), default=True)
     hastbotlog = db.Column(db.Boolean(), nullable=True, default=False)
     hastbotjson = db.Column(db.Boolean(), nullable=True, default=False)
+    hassystemmap = db.Column(db.Boolean(), nullable=True, default=False)
     content = db.Column(db.Text, nullable=False)
 
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

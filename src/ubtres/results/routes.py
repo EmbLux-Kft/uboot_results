@@ -45,6 +45,6 @@ def result(result_id):
     return render_template('result.html', title=result.title, result=result)
 
 @results.route("/result/files/results/<int:result_id>/<string:filename>")
-def result_tbot_log(result_id, filename):
+def result_file(result_id, filename):
     return send_from_directory(current_app.config['STORE_FILES'] + f"/{result_id}",
                                filename, as_attachment=True)

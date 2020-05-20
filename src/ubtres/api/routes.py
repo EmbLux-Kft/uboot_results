@@ -89,6 +89,12 @@ def set_result():
         f.save(f"{path}/tbot.json")
         res.hastbotjson = True
         db.session.commit()
+    if "systemmap" in request.files:
+        f = request.files["systemmap"]
+        f.save(f"{path}/System.map")
+        res.hassystemmap = True
+        db.session.commit()
+
 
     response = jsonify({})
     response.status_code = 201

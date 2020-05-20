@@ -94,13 +94,14 @@ m = MultipartEncoder(
         'soc':'imx6',
         'toolchain':'bootlin',
         'boardname':"wandboard DL",
-        'basecommit':'2345252ef',
+        'basecommit':'c2779dd',
         'defconfig':'wandboard_defconfig',
         'success':"True",
         'content':"from client.py",
         'images':'[{"name":"SPL", "size":"123458"},{"name":"u-boot.bin", "size":"767348"}, {"name":"u-boot.img", "size":"767548"}]',
         'tbotlog': ('filename', open('log/tbot.log', 'rb'), 'text/plain'),
         'tbotjson': ('filename', open('log/tbot.json', 'rb'), 'text/plain'),
+        'systemmap': ('filename', open('log/System.map', 'rb'), 'text/plain'),
         }
     )
 

@@ -74,6 +74,12 @@
               <td class="table-td"><a href="files/results/{{result.id}}/tbot.json">tbot json</td>
             </tr>
           {% endif %}
+          {% if result.hassystemmap %}
+            <tr>
+              <td class="table-td">System.map</td>
+              <td class="table-td"><a href="files/results/{{result.id}}/System.map">System.map</td>
+            </tr>
+          {% endif %}
           <tr>
             <td class="table-td">Notes</td>
             <td class="table-td">{{ result.content }}</td>
