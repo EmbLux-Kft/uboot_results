@@ -34,7 +34,7 @@ def side_values(num_list):
 
 @stats.route("/stats/<string:defconfig>/<string:imgtyp>/<int:count>")
 def stats_defconfig(defconfig, imgtyp, count):
-    dates, images = get_defconfig_data(defconfig, count)
+    ids, dates, images = get_defconfig_data(defconfig, count)
     if dates == None:
         return error_404(0)
 
@@ -75,6 +75,6 @@ def stats_defconfig(defconfig, imgtyp, count):
 @stats.route("/stats/<string:defconfig>/<int:count>")
 def result_spl_uboot(defconfig, count):
     data = {"defconfig" : defconfig, "count" : str(count) }
-    dates, images = get_defconfig_data(defconfig, count)
+    ids, dates, images = get_defconfig_data(defconfig, count)
     data["imagenames"] = get_images_names(images)
     return render_template('stats.html', title=f"Images for {defconfig}", data=data)

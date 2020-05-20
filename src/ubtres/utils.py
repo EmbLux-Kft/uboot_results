@@ -8,17 +8,19 @@ def get_defconfig_data(defconfig, count):
         return None, None
 
     i = 0
+    ids = []
     dates = []
     images = []
     for res in reversed(result):
         d = res.to_dict()
+        ids.insert(0, res.id)
         dates.insert(0, d["basecommit"])
         images.insert(0, d["images"])
         i += 1
         if i == count:
-            return dates, images
+            return ids, dates, images
 
-    return dates, images
+    return ids, dates, images
 
 def get_images_names(images):
     names = []
