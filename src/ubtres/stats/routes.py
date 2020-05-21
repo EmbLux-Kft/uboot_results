@@ -105,11 +105,19 @@ def systemmap_calc_diffs(new, old):
     return diffs
 
 def stats_diff_sizes(ids, dates, images):
+    print("IDS ", ids)
+    if (len(ids) < 2):
+            return error_416("diff_sizes")
     values = []
     i = 0
     for uid in ids:
-        print("UID ", uid)
-        path = current_app.config['STORE_FILES'] + f"/{uid - 1}"
+        if i == 0:
+            uidold = uid
+            i += 1
+            continue
+        print("UID O ", uidold)
+        print("UID N ", uid)
+        path = current_app.config['STORE_FILES'] + f"/{uidold}"
         fnold = f"{path}/System.map"
         path = current_app.config['STORE_FILES'] + f"/{uid}"
         fnnew = f"{path}/System.map"
@@ -127,6 +135,7 @@ def stats_diff_sizes(ids, dates, images):
         val = {"commit":dates[i], "sizediff":diffs}
         values.append(val)
         i += 1
+        uidold = uid
 
     for val in values:
         print("Commit ", val["commit"])
@@ -176,6 +185,7 @@ def stats_diff_sizes(ids, dates, images):
 
 @stats.route("/stats/<string:defconfig>/<string:imgtyp>/<int:count>")
 def stats_defconfig(defconfig, imgtyp, count):
+    count += 1
     ids, dates, images = get_defconfig_data(defconfig, count)
     if dates == None:
         return error_404(0)
