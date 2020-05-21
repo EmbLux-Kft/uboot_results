@@ -9,6 +9,8 @@ main = Blueprint('main', __name__)
 def home():
     page = request.args.get('page', 1, type=int)
     results = Result.query.order_by(Result.date_posted.desc()).paginate(page=page, per_page=15)
+    for r in results.items:
+        r.basecommit_short = (r.basecommit[:8] + '..') if len(r.basecommit) > 6 else r.basecommit
     return render_template('home.html', results=results)
 
 

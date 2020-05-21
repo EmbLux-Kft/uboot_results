@@ -26,7 +26,7 @@
                       <td class="result-title"> <a href="{{ url_for('users.user_results', username=result.author.username) }}"> <img class="rounded-circle result-img" src="{{ url_for('static', filename='profile_pics/' + result.author.image_file) }}"> </a></img> </td>
                       <td class="result-title"> {{ result.title }}</td>
                       <td class="result-build_date"> {{ result.build_date }}</td>
-		      <td class="result-basecommit"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit }}">{{ result.basecommit }}</td>
+		      <td class="result-basecommit"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit }}">{{ result.basecommit_short }}</td>
                       <td class="result-boardname"> {{ result.boardname }}</td>
                       <td class="result-defconfig"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
                     </tr>
