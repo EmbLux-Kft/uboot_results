@@ -259,8 +259,8 @@ def stats_diff_sizes(ids, dates, images):
 
         axis.set_xticks(xs)
         axis.set_xticklabels(names, rotation=90)
-        axis.bar(names, deltap, width=1, color='r')
-        axis.bar(names, deltan, width=1, color='b')
+        axis.bar(names, deltap, width=0.5, color='r')
+        axis.bar(names, deltan, width=0.5, color='b')
         row += 2
 
     canvas = FigureCanvas(fig)
