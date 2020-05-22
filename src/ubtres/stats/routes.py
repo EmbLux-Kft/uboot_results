@@ -12,6 +12,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import io
 import json
+import re
 
 stats = Blueprint('stats', __name__)
 
@@ -42,8 +43,8 @@ def systemmap_to_dict(filename):
 
             (addr, typ, name) = line.split()
             # ignore BSS
-            if "B" in typ.upper():
-                continue
+            #if "B" in typ.upper():
+            #    continue
             exists = False
             for o in d:
                 if o["name"] == name:
@@ -83,26 +84,103 @@ def systemmap_get_calc_sizes(d):
                 fixes = []
         old = n
 
-def systemmap_get_size(d, c):
-    for n in d:
-        if n["name"] == c["name"] and n["typ"] == c["typ"]:
-            return n["size"]
+#########
+# code from linux:/scripts/bload-o-meter
+re_NUMBER = re.compile(r'\.[0-9]+')
 
-    return -1
-
-def systemmap_calc_diffs(new, old):
-    diffs = []
-    for n in old:
+def getsizes(file, format):
+    sym = {}
+    sizes = systemmap_to_dict(file)
+    systemmap_get_calc_sizes(sizes)
+    for s in sizes:
         try:
-            ns = systemmap_get_size(new, n)
-            if ns == -1:
-                continue
-            if ns != n["size"]:
-                delta = int(ns) - int(n["size"])
-                diffs.append({"name":n["name"], "oldsize":n["size"], "newsize":ns, "delta":delta})
-        except KeyError:
-            pass
+            size = s["size"]
+        except:
+            continue
+        name = s["name"]
+        typ = s["typ"]
+
+        if typ in format:
+            # strip generated symbols
+            if name.startswith("__mod_"): continue
+            if name.startswith("__se_sys"): continue
+            if name.startswith("__se_compat_sys"): continue
+            if name.startswith("__addressable_"): continue
+            if name == "linux_banner": continue
+            # statics and some other optimizations adds random .NUMBER
+            name = re_NUMBER.sub('', name)
+            ns = sym.get(name)
+            if ns == None:
+                sym[name] = int(size)
+            else:
+                sym[name] = ns + int(size)
+
+    return sym
+
+def calc(oldfile, newfile, format):
+    old = getsizes(oldfile, format)
+    new = getsizes(newfile, format)
+    grow, shrink, add, remove, up, down = 0, 0, 0, 0, 0, 0
+    delta, common = [], {}
+    otot, ntot = 0, 0
+
+    for a in old:
+        if a in new:
+            common[a] = 1
+
+    for name in old:
+        otot += old[name]
+        if name not in common:
+            remove += 1
+            down += old[name]
+            delta.append((-old[name], name))
+
+    for name in new:
+        ntot += new[name]
+        if name not in common:
+            add += 1
+            up += new[name]
+            delta.append((new[name], name))
+
+    for name in common:
+        d = new.get(name, 0) - old.get(name, 0)
+        if d>0: grow, up = grow+1, up+d
+        if d<0: shrink, down = shrink+1, down-d
+        delta.append((d, name))
+
+    delta.sort()
+    delta.reverse()
+    return grow, shrink, add, remove, up, down, delta, old, new, otot, ntot
+
+def print_result(oldfile, newfile, symboltype, symbolformat):
+    grow, shrink, add, remove, up, down, delta, old, new, otot, ntot = \
+    calc(oldfile, newfile, symbolformat)
+
+    print("add/remove: %s/%s grow/shrink: %s/%s up/down: %s/%s (%s)" % \
+          (add, remove, grow, shrink, up, -down, up-down))
+    print("%-40s %7s %7s %+7s" % (symboltype, "old", "new", "delta"))
+    diffs = []
+    for d, n in delta:
+        if d:
+            print("%-40s %7s %7s %+7d" % (n, old.get(n,"-"), new.get(n,"-"), d))
+            diffs.append({"name":n, "oldsize":old.get(n,"-"), "newsize":new.get(n,"-"), "delta":d})
+
+    if otot:
+        percent = (ntot - otot) * 100.0 / otot
+    else:
+        percent = 0
+    print("Total: Before=%d, After=%d, chg %+.2f%%" % (otot, ntot, percent))
+
     return diffs
+
+def diff_bloat_o_meter(oldfile, newfile):
+    fd = print_result(oldfile, newfile, "Function", "tT")
+    dd = print_result(oldfile, newfile, "Data", "dDbB")
+    ro = print_result(oldfile, newfile, "RO Data", "rR")
+
+    return fd, dd, ro
+
+#########
 
 def stats_diff_sizes(ids, dates, images):
     print("IDS ", ids)
@@ -123,32 +201,41 @@ def stats_diff_sizes(ids, dates, images):
         fnnew = f"{path}/System.map"
         print("PATH ", fnold, fnnew)
         try:
-            old = systemmap_to_dict(fnold)
-            new = systemmap_to_dict(fnnew)
-            systemmap_get_calc_sizes(old)
-            systemmap_get_calc_sizes(new)
-            diffs = systemmap_calc_diffs(new, old)
+            fd, dd, ro = diff_bloat_o_meter(fnold, fnnew)
         except:
             print(f"not enough data file {fnold} {fnnew}")
             return error_416("diff_sizes")
 
-        val = {"commit":dates[i], "sizediff":diffs}
+        val = {"commit":dates[i], "function":fd, "data":dd, "readonly":ro}
         values.append(val)
         i += 1
         uidold = uid
 
+    print("VALUES ", values)
     for val in values:
         print("Commit ", val["commit"])
+        print("Function")
         print(f"name                                            old        new       delta")
-        diffs = val["sizediff"]
+        diffs = val["function"]
         for d in diffs:
             print(f'{d["name"]:40} {d["oldsize"]:10} {d["newsize"]:10}  {d["delta"]:+10}')
+        print("Data")
+        print(f"name                                            old        new       delta")
+        diffs = val["data"]
+        for d in diffs:
+            print(f'{d["name"]:40} {d["oldsize"]:10} {d["newsize"]:10}  {d["delta"]:+10}')
+        print("RO Data")
+        print(f"name                                            old        new       delta")
+        diffs = val["readonly"]
+        for d in diffs:
+            print(f'{d["name"]:40} {d["oldsize"]:10} {d["newsize"]:10}  {d["delta"]:+10}')
+
 
     # create the image
     fig = Figure(figsize=(14, len(values) * 7))
     row = 1
     for val in values:
-        diffs = val["sizediff"]
+        diffs = val["function"]
         axis = fig.add_subplot(len(values) * 2, 1, row)
         axis.set_title(f'diff size in bytes for commit {val["commit"]}')
         axis.set_xlabel("function")
