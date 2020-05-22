@@ -186,6 +186,11 @@ def stats_diff_sizes(ids, dates, images):
     print("IDS ", ids)
     if (len(ids) < 2):
             return error_416("diff_sizes")
+
+    # only print the last 2 commits
+    ids = ids[len(ids) - 3:]
+    dates = dates[len(dates) - 3:]
+    images = images[len(images) - 3:]
     values = []
     i = 0
     for uid in ids:
