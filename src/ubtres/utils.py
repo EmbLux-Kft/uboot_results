@@ -211,7 +211,9 @@ def stats_get_diff_sizes(defconfig, count):
     get binary size changes from defconfig count times.
 
     return array if dictionary from form:
-      [{"commit":commit,
+      [{
+         "prevcommit":previouscommit,
+         "commit":commit,
          "function":[{'name': 'fctname', 'oldsize': int, 'newsize': int, 'delta': int}]
          "data":[{'name': 'dataname', 'oldsize': int, 'newsize': int, 'delta': int}]
          "readonly":[{'name': 'ro data name', 'oldsize': int, 'newsize': int, 'delta': int}]
@@ -257,7 +259,7 @@ def stats_get_diff_sizes(defconfig, count):
             print(f"not enough data file {fnold} {fnnew}")
             return None
 
-        val = {"commit":dates[i], "function":fd, "data":dd, "readonly":ro}
+        val = {"prevcommit":dates[i - 1], "commit":dates[i], "function":fd, "data":dd, "readonly":ro}
         values.append(val)
         i += 1
         uidold = uid
