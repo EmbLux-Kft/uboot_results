@@ -182,10 +182,31 @@ def diff_bloat_o_meter(oldfile, newfile):
 
 #########
 
-def stats_diff_sizes(ids, dates, images):
+def stats_get_diff_sizes(defconfig, count):
+    """
+    get binary size changes from defconfig count times.
+
+    return array if dictionary from form:
+      [{"commit":commit,
+         "function":[{'name': 'fctname', 'oldsize': int, 'newsize': int, 'delta': int}]
+         "data":[{'name': 'dataname', 'oldsize': int, 'newsize': int, 'delta': int}]
+         "readonly":[{'name': 'ro data name', 'oldsize': int, 'newsize': int, 'delta': int}]
+       },
+      ]
+    """
+    count += 1
+    ids, dates, images = get_defconfig_data(defconfig, count)
+    if dates == None:
+        print("No dates")
+        return None
+
+    # shorten commit string to 6
+    dates = [(d[:6] + '..') if len(d) > 6 else d for d in dates]
+
     print("IDS ", ids)
     if (len(ids) < 2):
-            return error_416("diff_sizes")
+            print(f"not enough data")
+            return None
 
     # only print the last 2 commits
     ids = ids[len(ids) - 3:]
@@ -209,7 +230,7 @@ def stats_diff_sizes(ids, dates, images):
             fd, dd, ro = diff_bloat_o_meter(fnold, fnnew)
         except:
             print(f"not enough data file {fnold} {fnnew}")
-            return error_416("diff_sizes")
+            return None
 
         val = {"commit":dates[i], "function":fd, "data":dd, "readonly":ro}
         values.append(val)
@@ -235,7 +256,9 @@ def stats_diff_sizes(ids, dates, images):
         for d in diffs:
             print(f'{d["name"]:40} {d["oldsize"]:10} {d["newsize"]:10}  {d["delta"]:+10}')
 
+    return values
 
+def create_stats_image(values):
     # create the image
     fig = Figure(figsize=(14, len(values) * 7))
     row = 1
@@ -277,7 +300,12 @@ def stats_diff_sizes(ids, dates, images):
 
 @stats.route("/stats/<string:defconfig>/<string:imgtyp>/<int:count>")
 def stats_defconfig(defconfig, imgtyp, count):
-    count += 1
+    if imgtyp == "diff_sizes":
+        values = stats_get_diff_sizes(defconfig, count)
+        if values == None:
+            return error_416("diff_sizes")
+        return create_stats_image(values)
+
     ids, dates, images = get_defconfig_data(defconfig, count)
     if dates == None:
         return error_404(0)
@@ -285,8 +313,6 @@ def stats_defconfig(defconfig, imgtyp, count):
     # shorten commit string to 6
     dates = [(d[:6] + '..') if len(d) > 6 else d for d in dates]
 
-    if imgtyp == "diff_sizes":
-        return stats_diff_sizes(ids, dates, images)
 
     images = convert_images_to_picture(images)
     img = None
