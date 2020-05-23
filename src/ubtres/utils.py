@@ -233,9 +233,10 @@ def stats_get_diff_sizes(defconfig, count):
             return None
 
     # only print the last 2 commits
-    ids = ids[len(ids) - 3:]
-    dates = dates[len(dates) - 3:]
-    images = images[len(images) - 3:]
+    if len(ids) > 3:
+        ids = ids[len(ids) - 3:]
+        dates = dates[len(dates) - 3:]
+        images = images[len(images) - 3:]
     values = []
     i = 0
     for uid in ids:
