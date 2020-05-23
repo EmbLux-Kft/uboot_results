@@ -4,8 +4,9 @@ from ubtres.models import Result
 import json
 import re
 
-def get_defconfig_data(defconfig, count):
+def get_defconfig_data(defconfig, count, uid=None):
     result = Result.query.filter(Result.defconfig==defconfig).all()
+
     if result == None:
         return None, None
 
@@ -14,6 +15,9 @@ def get_defconfig_data(defconfig, count):
     dates = []
     images = []
     for res in reversed(result):
+        if uid != None:
+            if res.id > uid:
+                continue
         d = res.to_dict()
         ids.insert(0, res.id)
         dates.insert(0, d["basecommit"])
@@ -206,7 +210,7 @@ def diff_bloat_o_meter(oldfile, newfile):
 
 #########
 
-def stats_get_diff_sizes(defconfig, count):
+def stats_get_diff_sizes(defconfig, count, uid=None):
     """
     get binary size changes from defconfig count times.
 
@@ -221,7 +225,7 @@ def stats_get_diff_sizes(defconfig, count):
       ]
     """
     count += 1
-    ids, dates, images = get_defconfig_data(defconfig, count)
+    ids, dates, images = get_defconfig_data(defconfig, count, uid)
     if dates == None:
         print("No dates")
         return None

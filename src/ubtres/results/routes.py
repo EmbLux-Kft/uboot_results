@@ -43,7 +43,10 @@ def result(result_id):
 
     result.json_images = json.loads(result.images)
     result.calc_values()
-    return render_template('result.html', title=result.title, result=result)
+    if result.hassystemmap:
+        values = stats_get_diff_sizes(result.defconfig, 1, uid=result.id)
+        return render_template('result.html', title=result.title, result=result, values=values[0])
+    return render_template('result.html', title=result.title, result=result, values=None)
 
 @results.route("/result/files/results/<int:result_id>/<string:filename>")
 def result_file(result_id, filename):

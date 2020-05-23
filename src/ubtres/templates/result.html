@@ -60,7 +60,7 @@
                 <td class="table-td">{{ n["name"] }}</td>
                 <td class="table-td">{{ n["size"] }} bytes = {{ n["sizekib"] }}</td>
               </tr>
-	          {%endfor%}
+            {%endfor%}
           {% endif %}
           {% if result.hastbotlog %}
             <tr>
@@ -84,6 +84,89 @@
             <td class="table-td">Notes</td>
             <td class="table-td">{{ result.content }}</td>
           </tr>
+          {% if result.hassystemmap %}
+            {% if result.values != None %}
+              <td class="table-td">Size diff to commit {{ values["prevcommit"] }}</td>
+              <td class="table-td">
+
+              {% if values["function"] %}
+              {% if result.success %}
+                <table class="table-success">
+              {% else %}
+                <table class="table-failure">
+              {% endif %}
+                <p>Function </p>
+                <tr>
+                  <th>Name</th>
+                  <th>old size</th>
+                  <th>new size</th>
+                  <th>delta</th>
+                </tr>
+
+                {% for n in values["function"] %}
+                <tr>
+                  <td>{{ n["name"] }}</td>
+                  <td>{{ n["oldsize"] }}</td>
+                  <td>{{ n["newsize"] }}</td>
+                  <td>{{ n["delta"] }}</td>
+                </tr>
+              {%endfor%}
+              </table>
+              {% endif %}
+
+              {% if values["data"] %}
+              {% if result.success %}
+                <table class="table-success">
+              {% else %}
+                <table class="table-failure">
+              {% endif %}
+                <p>Data</p>
+                <tr>
+                  <th>Name</th>
+                  <th>old size</th>
+                  <th>new size</th>
+                  <th>delta</th>
+                </tr>
+
+                {% for n in values["data"] %}
+                <tr>
+                  <td>{{ n["name"] }}</td>
+                  <td>{{ n["oldsize"] }}</td>
+                  <td>{{ n["newsize"] }}</td>
+                  <td>{{ n["delta"] }}</td>
+                </tr>
+              {%endfor%}
+              </table>
+              {% endif %}
+
+              {% if values["readonly"] %}
+              {% if result.success %}
+                <table class="table-success">
+              {% else %}
+                <table class="table-failure">
+              {% endif %}
+                <p>RO data</p>
+                <tr>
+                  <th>Name</th>
+                  <th>old size</th>
+                  <th>new size</th>
+                  <th>delta</th>
+                </tr>
+
+                {% for n in values["readonly"] %}
+                <tr>
+                  <td>{{ n["name"] }}</td>
+                  <td>{{ n["oldsize"] }}</td>
+                  <td>{{ n["newsize"] }}</td>
+                  <td>{{ n["delta"] }}</td>
+                </tr>
+              {%endfor%}
+              </table>
+              {% endif %}
+
+              </td>
+            {% endif %}
+          {% endif %}
       </table>
     </div>
   </result>
