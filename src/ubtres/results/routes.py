@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from ubtres import db
 from ubtres.models import Result
 from ubtres.results.forms import ResultForm
+from ubtres.utils import stats_get_diff_sizes
 import json
 
 results = Blueprint('results', __name__)
