@@ -45,7 +45,10 @@ def result(result_id):
     result.calc_values()
     if result.hassystemmap:
         values = stats_get_diff_sizes(result.defconfig, 1, uid=result.id)
-        return render_template('result.html', title=result.title, result=result, values=values[0])
+        if values != None:
+            return render_template('result.html', title=result.title, result=result, values=values[0])
+        else:
+            return render_template('result.html', title=result.title, result=result, values=None)
     return render_template('result.html', title=result.title, result=result, values=None)
 
 @results.route("/result/files/results/<int:result_id>/<string:filename>")

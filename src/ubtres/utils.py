@@ -69,10 +69,15 @@ def systemmap_to_dict(filename):
             if line[0] == "#":
                 continue
 
-            (addr, typ, name) = line.split()
-            # ignore BSS
-            #if "B" in typ.upper():
-            #    continue
+            # System.map for BBB contains
+            # 80851428 T __div0
+            # 80851430 t
+            #
+            # so a line with missing name ???
+            try:
+                (addr, typ, name) = line.split()
+            except:
+                continue
             exists = False
             for o in d:
                 if o["name"] == name:
@@ -259,7 +264,8 @@ def stats_get_diff_sizes(defconfig, count, uid=None):
         print("PATH ", fnold, fnnew)
         try:
             fd, dd, ro = diff_bloat_o_meter(fnold, fnnew)
-        except:
+        except Exception as e:
+            print(e)
             print(f"not enough data file {fnold} {fnnew}")
             return None
 
