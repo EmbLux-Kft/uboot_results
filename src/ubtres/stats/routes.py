@@ -101,7 +101,7 @@ def stats_defconfig(defconfig, imgtyp, count):
         return error_416(imgtyp)
 
     sz = img["values"]
-    fig = Figure(figsize=(14, 9))
+    fig = Figure(figsize=(14, 10))
     axis = fig.add_subplot(1, 1, 1)
     axis.set_title(f'{img["name"]} size in bytes')
     minv, maxv = side_values(sz)
