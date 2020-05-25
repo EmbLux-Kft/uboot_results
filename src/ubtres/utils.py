@@ -235,8 +235,8 @@ def stats_get_diff_sizes(defconfig, count, uid=None):
         print("No dates")
         return None
 
-    # shorten commit string to 6
-    dates = [(d[:6] + '..') if len(d) > 6 else d for d in dates]
+    # shorten commit string to 8
+    dates = [(d[:8] + '..') if len(d) > 8 else d for d in dates]
 
     print("IDS ", ids)
     if (len(ids) < 2):

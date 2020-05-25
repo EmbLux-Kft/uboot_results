@@ -86,8 +86,8 @@ def stats_defconfig(defconfig, imgtyp, count):
     if dates == None:
         return error_404(0)
 
-    # shorten commit string to 6
-    dates = [(d[:6] + '..') if len(d) > 6 else d for d in dates]
+    # shorten commit string to 8
+    dates = [(d[:8] + '..') if len(d) > 8 else d for d in dates]
 
 
     images = convert_images_to_picture(images)
