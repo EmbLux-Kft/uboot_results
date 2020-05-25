@@ -1,5 +1,6 @@
 from flask import render_template, request, Blueprint
 from ubtres.models import Result
+from ubtres.utils import shorten_commit_id
 
 main = Blueprint('main', __name__)
 
@@ -10,7 +11,7 @@ def home():
     page = request.args.get('page', 1, type=int)
     results = Result.query.order_by(Result.date_posted.desc()).paginate(page=page, per_page=15)
     for r in results.items:
-        r.basecommit_short = (r.basecommit[:8] + '..') if len(r.basecommit) > 8 else r.basecommit
+        r.basecommit_short = shorten_commit_id(r.basecommit)
     return render_template('home.html', results=results)
 
 

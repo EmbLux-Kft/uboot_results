@@ -20,7 +20,7 @@ def get_defconfig_data(defconfig, count, uid=None):
                 continue
         d = res.to_dict()
         ids.insert(0, res.id)
-        dates.insert(0, d["basecommit"])
+        dates.insert(0, shorten_commit_id(d["basecommit"]))
         images.insert(0, d["images"])
         i += 1
         if i == count:
@@ -215,6 +215,15 @@ def diff_bloat_o_meter(oldfile, newfile):
 
 #########
 
+def shorten_commit_id(commit):
+    if "v" in commit:
+        return commit
+
+    if len(commit) < 8:
+        return commit
+
+    return commit[:8]
+
 def stats_get_diff_sizes(defconfig, count, uid=None):
     """
     get binary size changes from defconfig count times.
@@ -234,9 +243,6 @@ def stats_get_diff_sizes(defconfig, count, uid=None):
     if dates == None:
         print("No dates")
         return None
-
-    # shorten commit string to 8
-    dates = [(d[:8] + '..') if len(d) > 8 else d for d in dates]
 
     print("IDS ", ids)
     if (len(ids) < 2):

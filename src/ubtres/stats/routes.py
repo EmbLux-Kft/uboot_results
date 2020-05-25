@@ -5,6 +5,7 @@ from ubtres.utils import get_defconfig_data
 from ubtres.utils import get_images_names
 from ubtres.utils import convert_images_to_picture
 from ubtres.utils import stats_get_diff_sizes
+from ubtres.utils import shorten_commit_id
 from ubtres import db
 from ubtres.models import Result
 from ubtres.errors.handlers import error_404, error_416
@@ -85,10 +86,6 @@ def stats_defconfig(defconfig, imgtyp, count):
     ids, dates, images = get_defconfig_data(defconfig, count)
     if dates == None:
         return error_404(0)
-
-    # shorten commit string to 8
-    dates = [(d[:8] + '..') if len(d) > 8 else d for d in dates]
-
 
     images = convert_images_to_picture(images)
     img = None
