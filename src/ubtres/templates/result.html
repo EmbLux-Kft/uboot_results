@@ -44,7 +44,7 @@
           </tr>
           <tr>
             <td class="table-td">Basecommit</td>
-            <td class="table-td"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit }}">{{ result.basecommit }}</td>
+            <td class="table-td"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit_long }}">{{ result.basecommit_long }}</td>
           </tr>
           <tr>
             <td class="table-td">Boardname</td>
@@ -52,7 +52,7 @@
           </tr>
           <tr>
             <td class="table-td">Defconfig</td>
-            <td class="table-td"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
+            <td class="table-td"><a href="https://gitlab.denx.de/u-boot/u-boot/-/blob/{{ result.basecommit_long }}/configs/{{ result.defconfig }}">{{ result.defconfig }}</td>
           </tr>
           {% if result.images %}
             {% for n in result.json_images %}

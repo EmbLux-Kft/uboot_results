@@ -3,9 +3,9 @@
   <result class="media content-section">
     <div class="media-body">
       {% for n in data["imagenames"] %}
-        <img src="/stats/{{ data["defconfig"] }}/{{ n }}/{{ data["count"] }}" alt="Image U-Boot">
+        <img class="stats-img" src="/stats/{{ data["defconfig"] }}/{{ n }}/{{ data["count"] }}" alt="Image U-Boot">
       {%endfor%}
-      <img src="/stats/{{ data["defconfig"] }}/diff_sizes/{{ data["count"] }}" alt="diff sizes from System.map">
+      <img class="stats-img" src="/stats/{{ data["defconfig"] }}/diff_sizes/{{ data["count"] }}" alt="diff sizes from System.map">
     </div>
   </result>
 {% endblock content %}

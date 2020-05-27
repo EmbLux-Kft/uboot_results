@@ -42,7 +42,7 @@ def create_stats_image(values):
     for val in values:
         diffs = val["function"]
         axis = fig.add_subplot(len(values) * 2, 1, row)
-        axis.set_title(f'diff size in bytes for commit {val["commit"]}')
+        axis.set_title(f'sizediff in bytes between  {val["prevcommit"]} and {val["commit"]}')
         axis.set_xlabel("function")
         axis.set_ylabel("size in bytes")
         axis.grid(True)
@@ -98,7 +98,7 @@ def stats_defconfig(defconfig, imgtyp, count):
         return error_416(imgtyp)
 
     sz = img["values"]
-    fig = Figure(figsize=(14, 10))
+    fig = Figure(figsize=(18, 18))
     axis = fig.add_subplot(1, 1, 1)
     axis.set_title(f'{img["name"]} size in bytes')
     minv, maxv = side_values(sz)
@@ -108,7 +108,7 @@ def stats_defconfig(defconfig, imgtyp, count):
     axis.set_ylim([minv, maxv])
     xs = range(count)
     axis.set_xticks(xs)
-    axis.set_xticklabels(dates, rotation=90)
+    axis.set_xticklabels(dates, rotation=45)
     axis.plot(xs, sz, 'r*', label=img["name"])
     axis.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0., shadow=True)
     canvas = FigureCanvas(fig)

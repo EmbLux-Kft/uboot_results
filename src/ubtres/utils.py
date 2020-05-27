@@ -4,6 +4,16 @@ from ubtres.models import Result
 import json
 import re
 
+def calc_basecommit(r):
+    if ":" in r.basecommit:
+        r.basecommit_long = r.basecommit.split(":")[0]
+        r.git_describe = r.basecommit.split(":")[1]
+    else:
+        r.basecommit_long = r.basecommit
+        r.git_describe = "unknown"
+    r.basecommit_short = shorten_commit_id(r.basecommit_long)
+    return r
+
 def get_defconfig_data(defconfig, count, uid=None):
     result = Result.query.filter(Result.defconfig==defconfig).all()
 
@@ -18,9 +28,13 @@ def get_defconfig_data(defconfig, count, uid=None):
         if uid != None:
             if res.id > uid:
                 continue
+        res = calc_basecommit(res)
         d = res.to_dict()
         ids.insert(0, res.id)
-        dates.insert(0, shorten_commit_id(d["basecommit"]))
+        if "unknown" in res.git_describe:
+            dates.insert(0, res.basecommit_short)
+        else:
+            dates.insert(0, res.git_describe)
         images.insert(0, d["images"])
         i += 1
         if i == count:
