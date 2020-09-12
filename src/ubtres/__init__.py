@@ -16,7 +16,7 @@ mail = Mail()
 
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static', static_url_path='/ubtestresults/static')
     app.config.from_object(Config)
 
     db.init_app(app)
@@ -31,11 +31,11 @@ def create_app(config_class=Config):
     from ubtres.main.routes import main
     from ubtres.errors.handlers import errors
     from ubtres.api.routes import restapi
-    app.register_blueprint(users)
-    app.register_blueprint(results)
-    app.register_blueprint(stats)
-    app.register_blueprint(main)
-    app.register_blueprint(errors)
-    app.register_blueprint(restapi, url_prefix='/api')
+    app.register_blueprint(users, url_prefix='/ubtestresults')
+    app.register_blueprint(results, url_prefix='/ubtestresults')
+    app.register_blueprint(stats, url_prefix='/ubtestresults')
+    app.register_blueprint(main, url_prefix='/ubtestresults')
+    app.register_blueprint(errors, url_prefix='/ubtestresults')
+    app.register_blueprint(restapi, url_prefix='/ubtestresults/api')
 
     return app

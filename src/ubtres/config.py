@@ -10,3 +10,4 @@ class Config:
     MAIL_USERNAME = os.environ.get('EMAIL_USER')
     MAIL_PASSWORD = os.environ.get('EMAIL_PASS')
     STORE_FILES = os.environ.get('STORE_FILES')
+    #APPLICATION_ROOT = "/ubtestresults"
