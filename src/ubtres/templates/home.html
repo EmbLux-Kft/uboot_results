@@ -8,7 +8,9 @@
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">user</th>
-                  <th scope="col">title</th>
+                  <th scope="col">Arch</th>
+                  <th scope="col">cpu</th>
+                  <th scope="col">SoC</th>
                   <th scope="col">Build Date</th>
                   <th scope="col">Basecommit</th>
                   <th scope="col">Boardname</th>
@@ -24,7 +26,9 @@
                   {% endif %}
                       <th scope="row"> <a href="{{ url_for('results.result', result_id=result.id) }}"> {{ result.id }}</a></th>
                       <td class="result-title"> <a href="{{ url_for('users.user_results', username=result.author.username) }}"> <img class="rounded-circle result-img" src="{{ url_for('static', filename='profile_pics/' + result.author.image_file) }}"> </a></img> </td>
-                      <td class="result-title"> {{ result.title }}</td>
+                      <td class="result-title"> {{ result.arch }}</td>
+                      <td class="result-title"> {{ result.cpu }}</td>
+                      <td class="result-title"> {{ result.soc }}</td>
                       <td class="result-build_date"> {{ result.build_date }}</td>
 		      <td class="result-basecommit"> <a href="https://gitlab.denx.de/u-boot/u-boot/-/commit/{{ result.basecommit_long }}">{{ result.basecommit_short }}</td>
                       <td class="result-boardname"> {{ result.boardname }}</td>
