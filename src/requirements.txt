@@ -14,7 +14,7 @@ Flask-Migrate==2.5.3
 itsdangerous==0.24
 Jinja2==2.10
 MarkupSafe==1.0
-Pillow==6.2.2
+Pillow==9.3.0
 pycparser==2.18
 six==1.11.0
 SQLAlchemy==1.2.7
